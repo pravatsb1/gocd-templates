@@ -1,37 +1,43 @@
-format_version: 3
-pipelines:
-  - name: PythonAppPipeline
-    group: MyApplicationGroup
-    label_template: '${COUNT}'
+pipeline:
+  name: Your-Go-App-Pipeline
 
-    materials:
-      - git: https://github.com/your-username/your-python-app.git
-        branch: main
+stages:
+  - name: Build
+    jobs:
+      - name: Build-App
+        resources:
+          - your-build-agent
+        environment_variables:
+          - name: GOPATH
+            value: /go
+        tasks:
+          - script:
+              - mkdir -p /go/src/github.com/yourusername/your-go-app
+              - cp -r ./* /go/src/github.com/yourusername/your-go-app/
+              - cd /go/src/github.com/yourusername/your-go-app
+              - go build -o your-go-app
 
-    stages:
-      - name: Build
-        jobs:
-          - name: BuildJob
-            tasks:
-              - exec:
-                  command: python
-                  arguments: ['build.py']
-                working_directory: /path/to/your/app
+  - name: Test
+    jobs:
+      - name: Test-App
+        resources:
+          - your-test-agent
+        environment_variables:
+          - name: GOPATH
+            value: /go
+        tasks:
+          - script:
+              - cd /go/src/github.com/yourusername/your-go-app
+              - go test ./...
 
-      - name: Test
-        jobs:
-          - name: TestJob
-            tasks:
-              - exec:
-                  command: python
-                  arguments: ['test.py']
-                working_directory: /path/to/your/app
-
-      - name: Deploy
-        jobs:
-          - name: DeployJob
-            tasks:
-              - exec:
-                  command: python
-                  arguments: ['deploy.py']
-                working_directory: /path/to/your/app
+  - name: Deploy
+    jobs:
+      - name: Deploy-App
+        resources:
+          - your-deploy-agent
+        environment_variables:
+          - name: GOPATH
+            value: /go
+        tasks:
+          - script:
+              - # Add your deployment script here
