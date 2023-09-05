@@ -1,11 +1,11 @@
 format_version: 3
 pipelines:
   - name: SpringBootAppPipeline
-    group: MyApplicationGroup
+    group: templates
     label_template: '${COUNT}'
 
     materials:
-      - git: https://github.com/your-username/your-spring-boot-app.git
+      - git: https://github.com/pravatsb1/gocd-templates.git
         branch: main
 
     stages:
