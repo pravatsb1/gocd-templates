@@ -1,32 +1,37 @@
 format_version: 3
 pipelines:
-  - name: SpringBootAppPipeline
-    group: templates
+  - name: PythonAppPipeline
+    group: MyApplicationGroup
     label_template: '${COUNT}'
+
     materials:
-      - git: https://github.com/pravatsb1/gocd-templates.git
+      - git: https://github.com/your-username/your-python-app.git
         branch: main
+
     stages:
       - name: Build
         jobs:
           - name: BuildJob
             tasks:
               - exec:
-                  command: ./mvnw
-                  arguments: ['clean', 'package']
+                  command: python
+                  arguments: ['build.py']
                 working_directory: /path/to/your/app
+
       - name: Test
         jobs:
           - name: TestJob
             tasks:
               - exec:
-                  command: ./mvnw
-                  arguments: ['test']
+                  command: python
+                  arguments: ['test.py']
                 working_directory: /path/to/your/app
+
       - name: Deploy
         jobs:
           - name: DeployJob
             tasks:
               - exec:
-                  command: /path/to/deployment/script.sh
+                  command: python
+                  arguments: ['deploy.py']
                 working_directory: /path/to/your/app
