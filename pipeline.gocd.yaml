@@ -1,0 +1,36 @@
+format_version: 3
+pipelines:
+  - name: SpringBootAppPipeline
+    group: MyApplicationGroup
+    label_template: '${COUNT}'
+
+    materials:
+      - git: https://github.com/your-username/your-spring-boot-app.git
+        branch: main
+
+    stages:
+      - name: Build
+        jobs:
+          - name: BuildJob
+            tasks:
+              - exec:
+                  command: ./mvnw
+                  arguments: ['clean', 'package']
+                working_directory: /path/to/your/app
+
+      - name: Test
+        jobs:
+          - name: TestJob
+            tasks:
+              - exec:
+                  command: ./mvnw
+                  arguments: ['test']
+                working_directory: /path/to/your/app
+
+      - name: Deploy
+        jobs:
+          - name: DeployJob
+            tasks:
+              - exec:
+                  command: /path/to/deployment/script.sh
+                working_directory: /path/to/your/app
